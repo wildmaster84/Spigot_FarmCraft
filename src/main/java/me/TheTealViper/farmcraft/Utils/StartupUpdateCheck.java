@@ -1,6 +1,8 @@
 package me.TheTealViper.farmcraft.Utils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
@@ -8,7 +10,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -87,7 +88,7 @@ public class StartupUpdateCheck {
 		if(update){
 			File file = new File("plugins/" + plugin.getDescription().getName() + "/config.yml");
 			try {
-				FileUtils.copyFile(file, new File("plugins/" + plugin.getDescription().getName() + "/configBACKUP_" + oldVersion + ".yml"));
+				copyFile(file, new File("plugins/" + plugin.getDescription().getName() + "/configBACKUP_" + oldVersion + ".yml"));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -112,5 +113,17 @@ public class StartupUpdateCheck {
             
         }
         return null;
+    }
+	
+	private void copyFile(File file, File file2) throws IOException {
+		FileInputStream fileInputStream = new FileInputStream(file);
+        FileOutputStream fileOutputStream = new FileOutputStream(file2);
+        byte[] array = new byte[1024];
+        int read;
+        while ((read = fileInputStream.read(array)) > 0) {
+            fileOutputStream.write(array, 0, read);
+        }
+        fileInputStream.close();
+        fileOutputStream.close();
     }
 }
